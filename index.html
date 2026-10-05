@@ -5,74 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cash or Crash</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
-            background-color: #121212;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
             color: #ffffff;
-            font-family: Arial, sans-serif;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
             overflow: hidden;
-        }
-        #game-container {
-            text-align: center;
-            background: #1e1e1e;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            width: 90%;
+        }
+        .game-container {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
             max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            text-align: center;
         }
         h1 {
-            margin-top: 0;
-            color: #4CAF50;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, #4ade80, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        #multiplier {
-            font-size: 3rem;
-            margin: 20px 0;
+        .balance {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+        /* Style du puits et du seau */
+        .well-container {
+            position: relative;
+            width: 160px;
+            height: 180px;
+            margin: 0 auto 20px auto;
+            background: #090d16;
+            border-bottom: 6px solid #334155;
+            border-radius: 0 0 15px 15px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+        .rope {
+            position: absolute;
+            top: 0;
+            width: 4px;
+            background: #cbd5e1;
+            height: 40px;
+            transition: height 0.1s linear;
+        }
+        .bucket {
+            position: absolute;
+            top: 40px;
+            width: 60px;
+            height: 50px;
+            background: #475569;
+            border: 2px solid #64748b;
+            border-radius: 0 0 10px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s linear;
+            box-shadow: inset 0 5px 10px rgba(0,0,0,0.3);
+        }
+        .bucket::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            width: 50px;
+            height: 10px;
+            border: 2px solid #94a3b8;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+        .multiplier {
+            font-size: 2.2rem;
             font-weight: bold;
+            margin: 15px 0;
+            letter-spacing: 1px;
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 1.2rem;
-            border-radius: 8px;
-            cursor: pointer;
+        .btn {
             width: 100%;
-            margin-top: 10px;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
         }
-        button:active {
-            background-color: #45a049;
+        .btn-start {
+            background: #22c55e;
+            color: white;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
         }
-        #cashout-btn {
-            background-color: #ff9800;
+        .btn-start:active {
+            transform: scale(0.98);
+        }
+        .btn-cashout {
+            background: #eab308;
+            color: #0f172a;
+            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4);
             display: none;
         }
-        #cashout-btn:active {
-            background-color: #f57c00;
-        }
-        .stats {
+        .message {
             margin-top: 15px;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
+            min-height: 24px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
-    <div id="game-container">
+    <div class="game-container">
         <h1>Cash or Crash</h1>
-        <div class="stats">Balance: $<span id="balance">100</span></div>
-        <div id="multiplier">1.00x</div>
-        
-        <button id="start-btn" onclick="startGame()">Start Game</button>
-        <button id="cashout-btn" onclick="cashOut()">Cash Out</button>
-        
-        <div class="stats" id="message" style="margin-top: 20px; color: #aaa;">Place your bet and start!</div>
+        <div class="balance">Balance: $<span id="balance">100</span></div>
+
+        <!-- Le Puits et le Seau Graphique -->
+        <div class="well-container">
+            <div class="rope" id="rope" style="height: 20px;"></div>
+            <div class="bucket" id="bucket" style="transform: translateY(20px);">🪣</div>
+        </div>
+
+        <div class="multiplier" id="multiplier">1.00x</div>
+
+        <button id="actionBtn" class="btn btn-start" onclick="startGame()">Start Game</button>
+        <div class="message" id="message">Place your bet and start!</div>
     </div>
 
     <script>
@@ -82,40 +154,49 @@
         let crashPoint = 1.00;
         let isPlaying = false;
 
-        const balanceDisplay = document.getElementById("balance");
-        const multiplierDisplay = document.getElementById("multiplier");
-        const startBtn = document.getElementById("start-btn");
-        const cashoutBtn = document.getElementById("cashout-btn");
-        const messageDisplay = document.getElementById("message");
+        const balanceEl = document.getElementById('balance');
+        const multiplierEl = document.getElementById('multiplier');
+        const actionBtn = document.getElementById('actionBtn');
+        const messageEl = document.getElementById('message');
+        const bucketEl = document.getElementById('bucket');
+        const ropeEl = document.getElementById('rope');
 
         function startGame() {
-            if (balance <= 0) {
-                messageDisplay.innerText = "You have no money left!";
+            if (balance < 10) {
+                messageEl.innerText = "Not enough balance!";
+                messageEl.style.color = "#ef4444";
                 return;
             }
 
-            balance -= 10; // 10$ bet per game
-            balanceDisplay.innerText = balance;
+            balance -= 10;
+            balanceEl.innerText = balance;
             
-            currentMultiplier = 1.00;
-            multiplierDisplay.innerText = "1.00x";
-            messageDisplay.innerText = "Flying high...";
-            messageDisplay.style.color = "#4CAF50";
-
-            startBtn.style.display = "none";
-            cashoutBtn.style.display = "block";
             isPlaying = true;
+            currentMultiplier = 1.00;
+            multiplierEl.innerText = "1.00x";
+            multiplierEl.style.color = "#ffffff";
+            messageEl.innerText = "The bucket is rising...";
+            messageEl.style.color = "#38bdf8";
 
-            // Random crash point between 1.10x and 5.00x
-            crashPoint = (Math.random() * (5.0 - 1.1) + 1.1).toFixed(2);
+            actionBtn.innerText = "Cash Out";
+            actionBtn.className = "btn btn-cashout";
+            actionBtn.setAttribute("onclick", "cashOut()");
+
+            // Détermine aléatoirement le moment du crash (entre 1.10x et 5.00x)
+            crashPoint = parseFloat((Math.random() * 4 + 1.10).toFixed(2));
 
             gameInterval = setInterval(() => {
-                currentMultiplier = (parseFloat(currentMultiplier) + 0.05).toFixed(2);
-                multiplierDisplay.innerText = currentMultiplier + "x";
+                currentMultiplier += 0.03;
+                let displayVal = currentMultiplier.toFixed(2);
+                multiplierEl.innerText = displayVal + "x";
 
-                if (parseFloat(currentMultiplier) >= parseFloat(crashPoint)) {
-                    clearInterval(gameInterval);
-                    crash();
+                // Animation visuelle du seau qui monte dans le puits selon le multiplicateur
+                let position = Math.min(Math.floor((currentMultiplier - 1) * 30), 100);
+                ropeEl.style.height = (20 + position) + 'px';
+                bucketEl.style.transform = `translateY(${20 + position}px)`;
+
+                if (currentMultiplier >= crashPoint) {
+                    crashGame();
                 }
             }, 100);
         }
@@ -123,31 +204,39 @@
         function cashOut() {
             if (!isPlaying) return;
             clearInterval(gameInterval);
-            
-            const winnings = Math.floor(10 * currentMultiplier);
+            isPlaying = false;
+
+            let winnings = Math.floor(10 * currentMultiplier);
             balance += winnings;
-            balanceDisplay.innerText = balance;
+            balanceEl.innerText = balance;
 
-            messageDisplay.innerText = `Cashed out successfully! Won $${winnings}`;
-            messageDisplay.style.color = "#4CAF50";
-            
-            endGame();
+            multiplierEl.style.color = "#4ade80";
+            messageEl.innerText = `Cashed out successfully! Won $${winnings}`;
+            messageEl.style.color = "#4ade80";
+
+            resetButton();
         }
 
-        function crash() {
+        function crashGame() {
+            clearInterval(gameInterval);
             isPlaying = false;
-            multiplierDisplay.innerText = crashPoint + "x (CRASHED)";
-            messageDisplay.innerText = "Crash! You lost your bet.";
-            messageDisplay.style.color = "#f44336";
-            
-            endGame();
+
+            multiplierEl.style.color = "#ef4444";
+            multiplierEl.innerText = crashPoint.toFixed(2) + "x - CRASHED!";
+            messageEl.innerText = "The rope snapped! You lost your bet.";
+            messageEl.style.color = "#ef4444";
+
+            // Effet visuel de chute du seau
+            ropeEl.style.height = "10px";
+            bucketEl.style.transform = `translateY(120px)`;
+
+            resetButton();
         }
 
-        function endGame() {
-            isPlaying = false;
-            startBtn.style.display = "block";
-            cashoutBtn.style.display = "none";
-            startBtn.innerText = "Play Again";
+        function resetButton() {
+            actionBtn.innerText = "Play Again";
+            actionBtn.className = "btn btn-start";
+            actionBtn.setAttribute("onclick", "startGame()");
         }
     </script>
 </body>
