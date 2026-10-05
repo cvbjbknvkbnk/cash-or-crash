@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash or Crash - Deluxe Edition</title>
+    <title>Cash or Crash - Master Edition</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,144 +12,175 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            /* Environnement extérieur verdoyant et nature */
-            background: linear-gradient(180deg, #134e2c 0%, #1e6f3d 40%, #0f172a 100%);
+            background: linear-gradient(180deg, #10b981 0%, #065f46 25%, #0f172a 60%, #020617 100%);
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 15px;
-            overflow: hidden;
+            padding: 10px;
+            overflow-x: hidden;
         }
         .game-container {
-            background: rgba(15, 23, 42, 0.85);
-            border: 2px solid rgba(74, 222, 128, 0.3);
-            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(74, 222, 128, 0.35);
+            backdrop-filter: blur(14px);
             border-radius: 24px;
-            padding: 20px;
+            padding: 18px;
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            max-width: 410px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.85);
             text-align: center;
         }
         h1 {
-            font-size: 1.7rem;
-            margin-bottom: 4px;
+            font-size: 1.6rem;
+            margin-bottom: 2px;
             background: linear-gradient(45deg, #4ade80, #38bdf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(74, 222, 128, 0.2);
         }
-        .balance {
-            font-size: 0.95rem;
+        .balance-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
             color: #94a3b8;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            background: rgba(0,0,0,0.4);
+            padding: 6px 12px;
+            border-radius: 10px;
+        }
+        .balance-panel span {
+            color: #4ade80;
+            font-weight: bold;
         }
 
-        /* Décor du Puits en pierres grises avec ombrages profonds */
+        /* Tableau de bord des dernières cotes (Historique) */
+        .history-board {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .history-tag {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .history-tag.high { color: #4ade80; border-color: rgba(74, 222, 128, 0.4); }
+        .history-tag.low { color: #f87171; border-color: rgba(248, 113, 113, 0.4); }
+
+        /* Puits en pierres grises texturées avec ombrages profonds */
         .well-container {
             position: relative;
             width: 100%;
-            height: 230px;
-            margin: 0 auto 15px auto;
+            height: 220px;
+            margin: 0 auto 12px auto;
             background: 
-                radial-gradient(circle at center, #262c36 0%, #11151c 100%),
-                repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(0,0,0,0.4) 15px, rgba(0,0,0,0.4) 18px),
-                repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 32px);
+                radial-gradient(circle at center, #252f3e 0%, #090d14 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(0,0,0,0.6) 15px, rgba(0,0,0,0.6) 19px),
+                repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 33px);
             border: 4px solid #334155;
             border-top: 8px solid #475569;
             border-radius: 14px;
             overflow: hidden;
-            box-shadow: inset 0 20px 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(0,0,0,0.9);
+            box-shadow: inset 0 25px 45px rgba(0,0,0,0.95), inset 0 0 20px rgba(0,0,0,0.95);
             display: flex;
             justify-content: center;
         }
 
-        /* Effet de texture de briques/pierres sur les côtés du puits */
         .well-container::before {
             content: '';
             position: absolute;
             inset: 0;
-            box-shadow: inset 25px 0 30px rgba(0,0,0,0.7), inset -25px 0 30px rgba(0,0,0,0.7);
+            box-shadow: inset 25px 0 35px rgba(0,0,0,0.85), inset -25px 0 35px rgba(0,0,0,0.85);
             pointer-events: none;
             z-index: 2;
         }
 
-        .rope {
+        .bucket-assembly {
             position: absolute;
             top: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3;
+            transition: transform 0.08s ease-in-out;
+        }
+
+        .rope {
             width: 4px;
-            background: #d4d4d8;
-            box-shadow: 1px 0 3px rgba(0,0,0,0.8);
-            height: 20px;
-            z-index: 1;
-            transition: height 0.1s linear;
+            background: #e2e8f0;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.9);
+            height: 4px; 
+            transition: height 0.08s ease-in-out;
         }
 
         .bucket {
-            position: absolute;
-            top: 20px;
-            width: 64px;
-            height: 56px;
+            position: relative;
+            width: 50px;
+            height: 44px;
             background: linear-gradient(135deg, #64748b, #334155);
-            border: 2px solid #94a3b8;
-            border-radius: 0 0 14px 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 0 0 10px 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            z-index: 3;
-            transition: transform 0.1s linear;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.7), inset 0 4px 8px rgba(255,255,255,0.2);
+            font-size: 1.15rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.85), inset 0 3px 6px rgba(255,255,255,0.25);
         }
         
         .bucket::before {
             content: '';
             position: absolute;
-            top: -12px;
-            width: 52px;
-            height: 12px;
-            border: 3px solid #cbd5e1;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 38px;
+            height: 10px;
+            border: 2px solid #e2e8f0;
             border-top: none;
-            border-radius: 0 0 10px 10px;
+            border-radius: 0 0 6px 6px;
         }
 
         .multiplier-box {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 10px;
-            margin-bottom: 15px;
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 12px;
         }
 
         .multiplier {
-            font-size: 2.5rem;
+            font-size: 2.4rem;
             font-weight: 800;
             letter-spacing: 1px;
-            text-shadow: 0 0 15px rgba(255,255,255,0.2);
         }
 
         .btn {
             width: 100%;
-            padding: 15px;
-            font-size: 1.1rem;
+            padding: 13px;
+            font-size: 1.05rem;
             font-weight: bold;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         .btn-start {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: white;
             box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
-        }
-        .btn-start:active {
-            transform: scale(0.98);
         }
         .btn-cashout {
             background: linear-gradient(135deg, #eab308, #ca8a04);
@@ -158,9 +189,9 @@
             display: none;
         }
         .message {
-            margin-top: 12px;
-            font-size: 0.95rem;
-            min-height: 22px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            min-height: 20px;
             font-weight: 500;
         }
     </style>
@@ -169,20 +200,31 @@
 
     <div class="game-container">
         <h1>Cash or Crash</h1>
-        <div class="balance">Balance: $<span id="balance">100</span></div>
+        
+        <div class="balance-panel">
+            <div>Balance: $<span id="balance">100</span></div>
+            <div>Bet: <b>$10</b></div>
+        </div>
 
-        <!-- Puits grand format avec pierres grises et ombrages -->
+        <!-- Tableau de bord des dernières cotes -->
+        <div class="history-board" id="historyBoard">
+            <span class="history-tag">No history</span>
+        </div>
+
+        <!-- Puits et seau mécanique -->
         <div class="well-container" id="wellContainer">
-            <div class="rope" id="rope" style="height: 20px;"></div>
-            <div class="bucket" id="bucket" style="transform: translateY(20px);">🪣</div>
+            <div class="bucket-assembly" id="bucketAssembly" style="transform: translateX(-50%) translateY(8px);">
+                <div class="rope" id="rope" style="height: 4px;"></div>
+                <div class="bucket">🪣</div>
+            </div>
         </div>
 
         <div class="multiplier-box">
             <div class="multiplier" id="multiplier">1.00x</div>
         </div>
 
-        <button id="actionBtn" class="btn btn-start" onclick="startGame()">Start Game</button>
-        <div class="message" id="message">Place your bet and start!</div>
+        <button id="actionBtn" class="btn btn-start" onclick="startCountdown()">Place Bet / Ready</button>
+        <div class="message" id="message">Observe the landscape & place your continuity bet.</div>
     </div>
 
     <script>
@@ -191,16 +233,22 @@
         let gameInterval = null;
         let crashPoint = 1.00;
         let isPlaying = false;
+        let isCountingDown = false;
+        let tickCount = 0;
+        let history = [];
+        let countdownTimer = null;
 
         const balanceEl = document.getElementById('balance');
         const multiplierEl = document.getElementById('multiplier');
         const actionBtn = document.getElementById('actionBtn');
         const messageEl = document.getElementById('message');
-        const bucketEl = document.getElementById('bucket');
+        const bucketAssembly = document.getElementById('bucketAssembly');
         const ropeEl = document.getElementById('rope');
         const wellContainer = document.getElementById('wellContainer');
+        const historyBoard = document.getElementById('historyBoard');
 
-        function startGame() {
+        function startCountdown() {
+            if (isCountingDown || isPlaying) return;
             if (balance < 10) {
                 messageEl.innerText = "Not enough balance!";
                 messageEl.style.color = "#ef4444";
@@ -209,32 +257,70 @@
 
             balance -= 10;
             balanceEl.innerText = balance;
+
+            isCountingDown = true;
+            actionBtn.innerText = "Skip / Starting...";
             
+            let countdown = 7; // Compte à rebours fixé à 7s max
+            messageEl.innerText = `Continuity window: observe trends (${countdown}s)`;
+            messageEl.style.color = "#38bdf8";
+
+            // Permet de cliquer à nouveau pour passer le compte à rebours immédiatement
+            actionBtn.setAttribute("onclick", "skipCountdown()");
+
+            countdownTimer = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    messageEl.innerText = `Continuity window: observe trends (${countdown}s)`;
+                } else {
+                    clearInterval(countdownTimer);
+                    triggerLaunch();
+                }
+            }, 1000);
+        }
+
+        function skipCountdown() {
+            if (!isCountingDown) return;
+            clearInterval(countdownTimer);
+            triggerLaunch();
+        }
+
+        function triggerLaunch() {
+            isCountingDown = false;
             isPlaying = true;
             currentMultiplier = 1.00;
+            tickCount = 0;
             multiplierEl.innerText = "1.00x";
             multiplierEl.style.color = "#ffffff";
-            messageEl.innerText = "The bucket descends into the dark depths...";
+            messageEl.innerText = "Winch engaged: bucket descending into stone well...";
             messageEl.style.color = "#38bdf8";
 
             actionBtn.innerText = "Cash Out";
             actionBtn.className = "btn btn-cashout";
             actionBtn.setAttribute("onclick", "cashOut()");
 
-            // Aléatoire du crash entre 1.15x et 6.00x
-            crashPoint = parseFloat((Math.random() * 4.85 + 1.15).toFixed(2));
+            let rand = Math.random();
+            if (rand < 0.18) {
+                crashPoint = parseFloat((Math.random() * 0.4 + 1.02).toFixed(2)); 
+            } else {
+                crashPoint = parseFloat((Math.random() * 7.5 + 1.25).toFixed(2)); 
+            }
 
-            const maxWellHeight = wellContainer.clientHeight - 70;
+            const maxTravel = wellContainer.clientHeight - 65;
 
             gameInterval = setInterval(() => {
-                currentMultiplier += 0.025;
+                tickCount++;
+                currentMultiplier += 0.013;
                 let displayVal = currentMultiplier.toFixed(2);
                 multiplierEl.innerText = displayVal + "x";
 
-                // Descente progressive du seau dans le puits en pierre
-                let depthProgress = Math.min((currentMultiplier - 1) * 35, maxWellHeight);
-                ropeEl.style.height = (20 + depthProgress) + 'px';
-                bucketEl.style.transform = `translateY(${20 + depthProgress}px)`;
+                let progressFactor = Math.min((currentMultiplier - 1) / 5.0, 1);
+                
+                let mechanicalJitter = Math.sin(tickCount * 0.9) * 1.5;
+                let currentPos = 8 + (progressFactor * (maxTravel - 8)) + mechanicalJitter;
+                
+                bucketAssembly.style.transform = `translateX(-50%) translateY(${currentPos}px)`;
+                ropeEl.style.height = (4 + (progressFactor * 32)) + 'px';
 
                 if (currentMultiplier >= crashPoint) {
                     crashGame();
@@ -255,6 +341,7 @@
             messageEl.innerText = `Cashed out successfully! Won $${winnings}`;
             messageEl.style.color = "#4ade80";
 
+            addToHistory(currentMultiplier, true);
             resetButton();
         }
 
@@ -262,23 +349,34 @@
             clearInterval(gameInterval);
             isPlaying = false;
 
-            multiplierEl.style.color = "#ef4444";
+            multiplierEl.style.color = "#f87171";
             multiplierEl.innerText = crashPoint.toFixed(2) + "x - CRASHED!";
-            messageEl.innerText = "The rope snapped in the abyss! Lost bet.";
-            messageEl.style.color = "#ef4444";
+            messageEl.innerText = "The rope jammed in the dark abyss!";
+            messageEl.style.color = "#f87171";
 
-            // Effet de chute brutale au fond du puits
-            const maxWellHeight = wellContainer.clientHeight - 70;
-            ropeEl.style.height = maxWellHeight + 'px';
-            bucketEl.style.transform = `translateY(${maxWellHeight}px)`;
+            const maxTravel = wellContainer.clientHeight - 65;
+            bucketAssembly.style.transform = `translateX(-50%) translateY(${maxTravel}px)`;
 
+            addToHistory(crashPoint, false);
             resetButton();
         }
 
+        function addToHistory(cote, success) {
+            history.unshift({ val: cote.toFixed(2) + 'x', success: success });
+            if (history.length > 5) history.pop();
+
+            let html = '';
+            history.forEach(item => {
+                let cssClass = item.success ? 'high' : 'low';
+                html += `<div class="history-tag ${cssClass}">${item.val}</div>`;
+            });
+            historyBoard.innerHTML = html;
+        }
+
         function resetButton() {
-            actionBtn.innerText = "Play Again";
+            actionBtn.innerText = "Place Bet / Ready";
             actionBtn.className = "btn btn-start";
-            actionBtn.setAttribute("onclick", "startGame()");
+            actionBtn.setAttribute("onclick", "startCountdown()");
         }
     </script>
 </body>
