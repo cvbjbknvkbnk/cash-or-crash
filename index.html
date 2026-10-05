@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash or Crash</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #game-container {
+            text-align: center;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 400px;
+        }
+        h1 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+        #multiplier {
+            font-size: 3rem;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:active {
+            background-color: #45a049;
+        }
+        #cashout-btn {
+            background-color: #ff9800;
+            display: none;
+        }
+        #cashout-btn:active {
+            background-color: #f57c00;
+        }
+        .stats {
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <h1>Cash or Crash</h1>
+        <div class="stats">Balance: $<span id="balance">100</span></div>
+        <div id="multiplier">1.00x</div>
+        
+        <button id="start-btn" onclick="startGame()">Start Game</button>
+        <button id="cashout-btn" onclick="cashOut()">Cash Out</button>
+        
+        <div class="stats" id="message" style="margin-top: 20px; color: #aaa;">Place your bet and start!</div>
+    </div>
+
+    <script>
+        let balance = 100;
+        let currentMultiplier = 1.00;
+        let gameInterval = null;
+        let crashPoint = 1.00;
+        let isPlaying = false;
+
+        const balanceDisplay = document.getElementById("balance");
+        const multiplierDisplay = document.getElementById("multiplier");
+        const startBtn = document.getElementById("start-btn");
+        const cashoutBtn = document.getElementById("cashout-btn");
+        const messageDisplay = document.getElementById("message");
+
+        function startGame() {
+            if (balance <= 0) {
+                messageDisplay.innerText = "You have no money left!";
+                return;
+            }
+
+            balance -= 10; // 10$ bet per game
+            balanceDisplay.innerText = balance;
+            
+            currentMultiplier = 1.00;
+            multiplierDisplay.innerText = "1.00x";
+            messageDisplay.innerText = "Flying high...";
+            messageDisplay.style.color = "#4CAF50";
+
+            startBtn.style.display = "none";
+            cashoutBtn.style.display = "block";
+            isPlaying = true;
+
+            // Random crash point between 1.10x and 5.00x
+            crashPoint = (Math.random() * (5.0 - 1.1) + 1.1).toFixed(2);
+
+            gameInterval = setInterval(() => {
+                currentMultiplier = (parseFloat(currentMultiplier) + 0.05).toFixed(2);
+                multiplierDisplay.innerText = currentMultiplier + "x";
+
+                if (parseFloat(currentMultiplier) >= parseFloat(crashPoint)) {
+                    clearInterval(gameInterval);
+                    crash();
+                }
+            }, 100);
+        }
+
+        function cashOut() {
+            if (!isPlaying) return;
+            clearInterval(gameInterval);
+            
+            const winnings = Math.floor(10 * currentMultiplier);
+            balance += winnings;
+            balanceDisplay.innerText = balance;
+
+            messageDisplay.innerText = `Cashed out successfully! Won $${winnings}`;
+            messageDisplay.style.color = "#4CAF50";
+            
+            endGame();
+        }
+
+        function crash() {
+            isPlaying = false;
+            multiplierDisplay.innerText = crashPoint + "x (CRASHED)";
+            messageDisplay.innerText = "Crash! You lost your bet.";
+            messageDisplay.style.color = "#f44336";
+            
+            endGame();
+        }
+
+        function endGame() {
+            isPlaying = false;
+            startBtn.style.display = "block";
+            cashoutBtn.style.display = "none";
+            startBtn.innerText = "Play Again";
+        }
+    </script>
+</body>
+</html>
