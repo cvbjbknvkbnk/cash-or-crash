@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash or Crash - Vraies Pierres CSS</title>
+    <title>Cash or Crash - Design Neutre & Moderne</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background: linear-gradient(180deg, #10b981 0%, #047857 20%, #0f172a 50%, #020617 100%);
+            background: #090d16;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -22,108 +22,92 @@
             padding: 10px;
         }
         .game-container {
-            background: rgba(15, 23, 42, 0.96);
-            border: 3px solid #22c55e;
-            border-radius: 20px;
-            padding: 16px;
+            background: #111827;
+            border: 2px solid #374151;
+            border-radius: 16px;
+            padding: 20px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             text-align: center;
         }
         h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-            color: #4ade80;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #10b981;
         }
         .balance-panel {
             display: flex;
             justify-content: space-between;
             font-size: 0.9rem;
-            color: #94a3b8;
-            background: #1e293b;
-            padding: 6px 12px;
+            color: #9ca3af;
+            background: #1f2937;
+            padding: 8px 12px;
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .balance-panel span {
-            color: #4ade80;
+            color: #34d399;
             font-weight: bold;
         }
         .history-board {
             display: flex;
             gap: 6px;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             overflow-x: auto;
-            min-height: 26px;
+            min-height: 28px;
         }
         .history-tag {
-            background: #334155;
+            background: #1f2937;
             border-radius: 6px;
-            padding: 3px 8px;
+            padding: 4px 10px;
             font-size: 0.75rem;
             font-weight: bold;
         }
-        .history-tag.high { color: #4ade80; border: 1px solid #22c55e; }
-        .history-tag.low { color: #f87171; border: 1px solid #ef4444; }
+        .history-tag.high { color: #34d399; border: 1px solid #059669; }
+        .history-tag.low { color: #f87171; border: 1px solid #dc2626; }
 
-        /* VRAI MUR DE PIERRES EN CSS PUR (Briques texturées) */
-        .well-container {
+        /* ZONE GRAPHIQUE ABSTRAITE ET ÉPURÉE */
+        .visual-container {
             position: relative;
             width: 100%;
-            height: 210px;
-            background-color: #263345;
-            /* Motif de briques géométriques nettes et garanties */
-            background-image: 
-                linear-gradient(90deg, #182232 50%, transparent 50%),
-                linear-gradient(0deg, #182232 50%, transparent 50%);
-            background-size: 50px 25px;
-            border: 6px solid #64748b;
-            border-top: 10px solid #94a3b8;
-            border-radius: 12px;
+            height: 180px;
+            background: #1f2937;
+            border: 2px solid #4b5563;
+            border-radius: 10px;
             overflow: hidden;
-            margin-bottom: 12px;
-            box-shadow: inset 0 25px 40px rgba(0,0,0,0.95);
-        }
-
-        .bucket-assembly {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%) translateY(10px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 3;
-            transition: transform 0.08s linear;
-        }
-        .rope {
-            width: 4px;
-            background: #f8fafc;
-            height: 10px;
-            box-shadow: 2px 0 4px rgba(0,0,0,0.8);
-        }
-        .bucket {
-            width: 46px;
-            height: 40px;
-            background: linear-gradient(135deg, #64748b, #334155);
-            border: 2px solid #cbd5e1;
-            border-radius: 0 0 10px 10px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.8);
         }
+
+        .tracker-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(0deg, #059669, #34d399);
+            transition: height 0.08s linear;
+        }
+
+        .abstract-indicator {
+            position: relative;
+            z-index: 2;
+            font-size: 2rem;
+            background: rgba(17, 24, 39, 0.8);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #4b5563;
+        }
+
         .multiplier-box {
             font-size: 2.2rem;
             font-weight: 900;
             color: #ffffff;
-            margin-bottom: 10px;
-            background: rgba(0,0,0,0.4);
-            border-radius: 10px;
-            padding: 6px;
+            margin-bottom: 12px;
         }
         .btn {
             width: 100%;
@@ -131,26 +115,24 @@
             font-size: 1rem;
             font-weight: bold;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             text-transform: uppercase;
         }
         .btn-start {
-            background: #22c55e;
+            background: #059669;
             color: white;
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
         }
         .btn-cashout {
-            background: #eab308;
-            color: #0f172a;
-            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4);
+            background: #d97706;
+            color: #ffffff;
             display: none;
         }
         .message {
-            margin-top: 8px;
+            margin-top: 10px;
             font-size: 0.85rem;
             min-height: 20px;
-            color: #38bdf8;
+            color: #93c5fd;
         }
     </style>
 </head>
@@ -168,11 +150,9 @@
             <span class="history-tag">Aucune cote</span>
         </div>
 
-        <div class="well-container" id="wellContainer">
-            <div class="bucket-assembly" id="bucketAssembly">
-                <div class="rope" id="rope"></div>
-                <div class="bucket">🪣</div>
-            </div>
+        <div class="visual-container" id="visualContainer">
+            <div class="tracker-bar" id="trackerBar"></div>
+            <div class="abstract-indicator" id="abstractIndicator">⚡</div>
         </div>
 
         <div class="multiplier-box" id="multiplier">1.00x</div>
@@ -195,9 +175,7 @@
         const multiplierEl = document.getElementById('multiplier');
         const actionBtn = document.getElementById('actionBtn');
         const messageEl = document.getElementById('message');
-        const bucketAssembly = document.getElementById('bucketAssembly');
-        const ropeEl = document.getElementById('rope');
-        const wellContainer = document.getElementById('wellContainer');
+        const trackerBar = document.getElementById('trackerBar');
         const historyBoard = document.getElementById('historyBoard');
 
         function startCountdown() {
@@ -214,14 +192,14 @@
             actionBtn.innerText = "Passer (Lancer direct)";
             
             let countdown = 7;
-            messageEl.innerText = `Observation & Pari de continuité (${countdown}s)`;
+            messageEl.innerText = `Observation (${countdown}s)`;
 
             actionBtn.setAttribute("onclick", "skipCountdown()");
 
             countdownTimer = setInterval(() => {
                 countdown--;
                 if (countdown > 0) {
-                    messageEl.innerText = `Observation & Pari de continuité (${countdown}s)`;
+                    messageEl.innerText = `Observation (${countdown}s)`;
                 } else {
                     clearInterval(countdownTimer);
                     triggerLaunch();
@@ -241,14 +219,13 @@
             currentMultiplier = 1.00;
             multiplierEl.innerText = "1.00x";
             multiplierEl.style.color = "#ffffff";
-            messageEl.innerText = "Le seau descend dans le puits de pierre...";
+            messageEl.innerText = "Progression en cours...";
 
             actionBtn.innerText = "Cash Out";
             actionBtn.className = "btn btn-cashout";
             actionBtn.setAttribute("onclick", "cashOut()");
 
             crashPoint = parseFloat((Math.random() * 5.0 + 1.2).toFixed(2));
-            const maxTravel = wellContainer.clientHeight - 55;
             let tick = 0;
 
             gameInterval = setInterval(() => {
@@ -257,10 +234,7 @@
                 multiplierEl.innerText = currentMultiplier.toFixed(2) + "x";
 
                 let progress = Math.min((currentMultiplier - 1) / 4.0, 1);
-                let currentPos = 10 + (progress * (maxTravel - 10));
-                
-                bucketAssembly.style.transform = `translateX(-50%) translateY(${currentPos}px)`;
-                ropeEl.style.height = (10 + (progress * 35)) + 'px';
+                trackerBar.style.height = (progress * 100) + '%';
 
                 if (currentMultiplier >= crashPoint) {
                     crashGame();
@@ -277,7 +251,7 @@
             balance += winnings;
             balanceEl.innerText = balance;
 
-            multiplierEl.style.color = "#4ade80";
+            multiplierEl.style.color = "#34d399";
             messageEl.innerText = `Gagné ! +$${winnings}`;
 
             addToHistory(currentMultiplier, true);
@@ -290,10 +264,9 @@
 
             multiplierEl.style.color = "#f87171";
             multiplierEl.innerText = crashPoint.toFixed(2) + "x - CRASH !";
-            messageEl.innerText = "Le seau s'est bloqué au fond !";
+            messageEl.innerText = "Arrêt brutal de la progression.";
 
-            const maxTravel = wellContainer.clientHeight - 55;
-            bucketAssembly.style.transform = `translateX(-50%) translateY(${maxTravel}px)`;
+            trackerBar.style.background = "#dc2626";
 
             addToHistory(crashPoint, false);
             resetButton();
@@ -315,6 +288,8 @@
             actionBtn.innerText = "Prêt / Lancer (7s)";
             actionBtn.className = "btn btn-start";
             actionBtn.setAttribute("onclick", "startCountdown()");
+            trackerBar.style.height = "0%";
+            trackerBar.style.background = "linear-gradient(0deg, #059669, #34d399)";
         }
     </script>
 </body>
